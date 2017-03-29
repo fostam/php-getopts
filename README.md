@@ -2,19 +2,19 @@
 
 Flexible PHP command line argument parser with automated help message generation and validation support.
 
-## Install
-The easiest way to install GetOpts is by using [composer](https://getcomposer.org/): 
-
-```
-$> composer require fostam/getopts
-```
-
 ## Features
 - Flexible and intuitive configuration
 - Supports long/short options, option arguments, defaults, incrementable/negatable options etc.
 - Non-option argument handling
 - Automated usage error handling and help text generation
 - Option / argument validation
+
+## Install
+The easiest way to install GetOpts is by using [composer](https://getcomposer.org/): 
+
+```
+$> composer require fostam/getopts
+```
 
 ## Usage
 
