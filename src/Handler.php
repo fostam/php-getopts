@@ -44,8 +44,8 @@ class Handler {
      * @throws ConfigException
      */
     public function addOption($name, Option $opt = null) {
-        if (isset($this->configOpts[$name])) {
-            throw new ConfigException('option already set: ' . $name);
+        if (isset($this->configOpts[$name]) || isset($this->configArgs[$name])) {
+            throw new ConfigException('option/argument already set: ' . $name);
         }
 
         if (is_null($opt)) {
@@ -65,8 +65,8 @@ class Handler {
      * @throws ConfigException
      */
     public function addArgument($name, Argument $arg = null) {
-        if (isset($this->configArgs[$name])) {
-            throw new ConfigException('argument already set: ' . $name);
+        if (isset($this->configOpts[$name]) || isset($this->configArgs[$name])) {
+            throw new ConfigException('option/argument already set: ' . $name);
         }
 
         if (is_null($arg)) {
@@ -183,6 +183,26 @@ class Handler {
         }
 
         $this->result = $parser->getResult();
+    }
+
+    /**
+     * @param string $name
+     * @return array
+     */
+    public function get($name = '') {
+        if (!$name) {
+            return array_merge($this->result[Parser::RESULT_OPTIONS], $this->result[Parser::RESULT_ARGUMENTS]);
+        }
+
+        if (array_key_exists($name, $this->result[Parser::RESULT_OPTIONS])) {
+            return $this->result[Parser::RESULT_OPTIONS][$name];
+        }
+
+        if (array_key_exists($name, $this->result[Parser::RESULT_ARGUMENTS])) {
+            return $this->result[Parser::RESULT_ARGUMENTS][$name];
+        }
+
+        throw new \LogicException('option/argument not defined: ' . $name);
     }
 
     /**

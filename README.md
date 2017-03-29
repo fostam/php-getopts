@@ -38,7 +38,7 @@ $getopts->addArgument('outputFile')
 $getopts->parse();
 
 // show parsed options and arguments for demonstration purposes
-var_dump($getopts->getOptions(), $getopts->getArguments());
+var_dump($getopts->get());
 ```
 
 Depending on the given options and arguments, the output could look like this (`$>` is the command line prompt).
@@ -46,11 +46,9 @@ Depending on the given options and arguments, the output could look like this (`
 **Option and argument values:**
 ```
 $> php test.php -vvv hello
-array(1) {
+array(2) {
   ["verboseLevel"]=>
   int(3)
-}
-array(1) {
   ["outputFile"]=>
   string(5) "hello"
 }
@@ -71,7 +69,7 @@ Try 'test.php --help' for more information
 ```
 
 ## Option Configuration
-To add a new option to the GetOpts handler, the `addOption()` method is called. It takes the internal name for that option as argument. This internal name is later used to reference the option value in the parse result.
+To add a new option to the GetOpts handler, the `addOption()` method is called. It takes the internal name for that option as argument. This internal name is later used to reference the option value in the parse result and must be unique among all option *and* argument names.
 
 ```php
 $option = $handler->addOption('inputFile');
@@ -199,7 +197,7 @@ Argument configuration works similarly to option configuration. To add an argume
 $option = $handler->addArgument('outputFile');
 ```
 
-Like `Option`, the `Argument` configuration methods are chainable.
+Like `Option`, the `Argument` configuration methods are chainable. The argument's name must be unique among all option *and* argument names
 
 If mismatching argument configurations are called or naming constraints are not met, an `ArgumentConfigException` exception is thrown.
 
@@ -241,6 +239,21 @@ $arg->validator(function($value) {
 The given `callable` is passed the argument value as input and must return `true` or `false`.
 
 ## Parse Results
+### Generic Getter
+```php
+$result = $handler->get();
+```
+or
+```php
+$verbosity = $handler->get('verbosity');
+```
+
+With the generic `get()` method, any result - option or argument - can be retrieved. Without argument, an associative
+array containing both option and argument results is returned. When passing a name, the corresponding option
+or argument value is returned. If the name has not been configured, a `LogicException` is thrown.
+
+See **Options** and **Arguments** for details about the result values.
+
 ### Options
 ```php
 $optionArray = $handler->getOptions();
