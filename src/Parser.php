@@ -276,14 +276,19 @@ class Parser {
                     }
                 }
 
-                $this->arguments[$name] = $arg;
+                if ($multipleSet) {
+                    $this->arguments[$name] = [$arg];
+                }
+                else {
+                    $this->arguments[$name] = $arg;
+                }
             }
         }
 
         // if arguments are left, check if the last configured argument is 'multiple'
         if ($arguments) {
             if (isset($name) && isset($configArg) && $configArg->get(Argument::MULTIPLE)) {
-                $this->arguments[$name] = $arguments;
+                $this->arguments[$name] = array_merge($this->arguments[$name], $arguments);
             }
             else {
                 throw new TooManyArgumentsException();
