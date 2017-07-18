@@ -5,7 +5,7 @@
   "keywords" : ["argument", "option", "getopt", "parser", "parsing", "command line", "shell", "script"],
   "license": "MIT",
   "require": {
-    "php": "^5.6|^7.0"
+    "php": "~5.6|~7.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~5.5.0"
