@@ -190,6 +190,10 @@ class Handler {
      * @return array
      */
     public function get($name = '') {
+        if (is_null($this->result)) {
+            $this->parse();
+        }
+
         if (!$name) {
             return array_merge($this->result[Parser::RESULT_OPTIONS], $this->result[Parser::RESULT_ARGUMENTS]);
         }
@@ -213,7 +217,7 @@ class Handler {
      */
     public function getOptions() {
         if (is_null($this->result)) {
-            throw new \LogicException('options have not yet been parsed');
+            $this->parse();
         }
         return $this->result[Parser::RESULT_OPTIONS];
     }
@@ -226,7 +230,7 @@ class Handler {
      */
     public function getArguments() {
         if (is_null($this->result)) {
-            throw new \LogicException('options have not yet been parsed');
+            $this->parse();
         }
         return $this->result[Parser::RESULT_ARGUMENTS];
     }
