@@ -107,6 +107,10 @@ class Parser {
             } else if ($arg == '--') {
                 // end of option processing
                 $optsFinished = true;
+            } else if ($arg == '-') {
+                // treat single hyphen as argument
+                $this->argumentsRaw[] = $arg;
+                $lastOpt = false;
             } else if (substr($arg, 0, 2) == '--') {
                 // long opt
                 $opt = substr($arg, 2, strlen($arg) - 2);
