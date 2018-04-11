@@ -6,10 +6,7 @@ use Fostam\GetOpts\Exception\ArgumentConfigException;
 use PHPUnit\Framework\TestCase;
 use Fostam\GetOpts\Config\Argument;
 
-/**
- * @covers Argument
- */
-final class ArgumentTest extends TestCase {
+class ArgumentTest extends TestCase {
     /** @var Argument */
     private $argument;
 

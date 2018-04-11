@@ -12,10 +12,7 @@ use Fostam\GetOpts\Exception\InvalidArgumentException;
 use Fostam\GetOpts\Config\Option;
 use Fostam\GetOpts\Parser;
 
-/**
- * @covers Parser
- */
-final class ParserTest extends TestCase {
+class ParserTest extends TestCase {
     // bool options
     public function testShortOptionBoolGiven() {
         $opt = new Option();
@@ -425,7 +422,7 @@ final class ParserTest extends TestCase {
 
     // options / arguments mixed
     /**
-     * @dataProvider testOptionsArgumentsMixedProvider
+     * @dataProvider optionsArgumentsMixedProvider
      * @param $args
      * @param $expectedOpts
      * @param $expectedArgs
@@ -452,7 +449,7 @@ final class ParserTest extends TestCase {
         $this->assertEquals($expectedArgs, $result[Parser::RESULT_ARGUMENTS]);
     }
 
-    public function testOptionsArgumentsMixedProvider() {
+    public function optionsArgumentsMixedProvider() {
         return [
             [ ['x'], ['a' => null, 'b' => null, 'c' => 'defval'], ['x' => 'x', 'y' => null] ],
             [ ['x', 'y'], ['a' => null, 'b' => null, 'c' => 'defval'], ['x' => 'x', 'y' => 'y'] ],
