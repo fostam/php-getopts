@@ -6,10 +6,7 @@ use Fostam\GetOpts\Exception\OptionConfigException;
 use PHPUnit\Framework\TestCase;
 use Fostam\GetOpts\Config\Option;
 
-/**
- * @covers Option
- */
-final class OptionTest extends TestCase {
+class OptionTest extends TestCase {
     /** @var Option */
     private $option;
 

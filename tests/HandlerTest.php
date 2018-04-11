@@ -6,10 +6,7 @@ use Fostam\GetOpts\Exception\MissingArgumentsException;
 use Fostam\GetOpts\Handler;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Handler
- */
-final class HandlerTest extends TestCase {
+class HandlerTest extends TestCase {
     public function testHandling() {
         $handler = new Handler();
         $handler->addOption('opt1')->short('a')->incrementable();
