@@ -59,4 +59,9 @@ class ArgumentTest extends TestCase {
         $this->assertFalse(Argument::validateName(null));
         $this->assertFalse(Argument::validateName(''));
     }
+
+    public function testGetOnInvalidArgumentParam() {
+        $this->expectException(ArgumentConfigException::class);
+        $this->argument->get('invalid_arg');
+    }
 }

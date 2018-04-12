@@ -3,6 +3,7 @@
 namespace Fostam\GetOpts\Tests;
 
 use Fostam\GetOpts\Exception\MissingArgumentsException;
+use Fostam\GetOpts\Exception\ConfigException;
 use Fostam\GetOpts\Handler;
 use PHPUnit\Framework\TestCase;
 
@@ -28,5 +29,77 @@ class HandlerTest extends TestCase {
         $handler->disableErrorHandling();
         $handler->addArgument('test')->required();
         $handler->parse([]);
+    }
+
+    public function testSetHelpOptionLong() {
+        $handler = new Handler();
+        $result = $handler->setHelpOptionLong('--long');
+
+        $this->assertInstanceOf(Handler::class, $result);
+    }
+
+    public function testSetHelpOptionLongOnInvalidLongOption() {
+        $this->expectException(ConfigException::class);
+
+        $handler = new Handler();
+        $handler->setHelpOptionLong('invalid long option description.');
+    }
+
+    public function testSetHelpOptionShort() {
+        $handler = new Handler();
+        $result = $handler->setHelpOptionShort('s');
+
+        $this->assertInstanceOf(Handler::class, $result);
+    }
+
+    public function testSetHelpOptionShortOnInvalidShortOption() {
+        $this->expectException(ConfigException::class);
+
+        $handler = new Handler();
+        $result = $handler->setHelpOptionShort('invalid short option description.');
+
+        $this->assertInstanceOf(Handler::class, $result);
+    }
+
+    public function testAddOptionOnExistedOption() {
+        $this->expectException(ConfigException::class);
+
+        $handler = new Handler();
+        $handler->addOption('opt1')->short('a')->incrementable();
+        $handler->addOption('opt1')->short('a')->incrementable();
+    }
+
+    public function testAddArgumentOnExistedParam() {
+        $this->expectException(ConfigException::class);
+
+        $handler = new Handler();
+        $handler->addArgument('arg1');
+        $handler->addArgument('arg1');
+    }
+
+    public function testEnableTerseUsage() {
+        $handler = new Handler();
+        $result = $handler->enableTerseUsage();
+
+        $this->assertInstanceOf(Handler::class, $result);
+    }
+
+    public function testSetExtraHelpText() {
+        $handler = new Handler();
+        $result = $handler->setExtraHelpText('this is extra help text.');
+
+        $this->assertInstanceOf(Handler::class, $result);
+    }
+
+    public function testGetUsageString() {
+        $handler = new Handler();
+
+        $this->assertSame('php-script', $handler->getUsageString());
+    }
+
+    public function testGetHelpText() {
+        $handler = new Handler();
+
+        $this->assertSame('', $handler->getHelpText());
     }
 }
