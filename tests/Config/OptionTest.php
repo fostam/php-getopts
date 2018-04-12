@@ -144,4 +144,15 @@ class OptionTest extends TestCase {
         $this->expectException(OptionConfigException::class);
         $this->option->get();
     }
+
+    public function testArgumentOnInvalidCharacter() {
+        $this->expectException(OptionConfigException::class);
+        $this->option->argument('*****');
+    }
+
+    public function testGetOnInvalidParam() {
+        $this->expectException(OptionConfigException::class);
+        $this->option->short('t')->required();
+        $this->option->get('******');
+    }
 }
