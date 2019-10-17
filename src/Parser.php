@@ -49,6 +49,14 @@ class Parser {
 
     /**
      * @param array $args
+     * @throws InvalidArgumentException
+     * @throws InvalidOptionException
+     * @throws MissingArgumentsException
+     * @throws MissingOptionArgumentException
+     * @throws ShowHelpException
+     * @throws TooManyArgumentsException
+     * @throws UnrecognizedOptionException
+     * @throws MissingOptionsException
      */
     public function parse($args) {
         $this->collectShortLong();
@@ -198,6 +206,7 @@ class Parser {
 
     /**
      * @throws InvalidOptionException
+     * @throws MissingOptionsException
      */
     private function validateOptions() {
         // validate values and fill unspecified options with default values

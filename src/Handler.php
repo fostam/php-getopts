@@ -189,6 +189,7 @@ class Handler {
     /**
      * @param string $name
      * @return array
+     * @throws UsageException
      */
     public function get($name = '') {
         if (is_null($this->result)) {
@@ -214,7 +215,7 @@ class Handler {
      * get the parsed options and their values
      *
      * @return array
-     * @throws LogicException
+     * @throws UsageException
      */
     public function getOptions() {
         if (is_null($this->result)) {
@@ -227,7 +228,7 @@ class Handler {
      * get parsed argument values
      *
      * @return array
-     * @throws LogicException
+     * @throws UsageException
      */
     public function getArguments() {
         if (is_null($this->result)) {
