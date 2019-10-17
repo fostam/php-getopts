@@ -7,6 +7,7 @@ use Fostam\GetOpts\Config\Option;
 use Fostam\GetOpts\Exception\ConfigException;
 use Fostam\GetOpts\Exception\ShowHelpException;
 use Fostam\GetOpts\Exception\UsageException;
+use LogicException;
 
 /**
  * Class Handler
@@ -206,14 +207,14 @@ class Handler {
             return $this->result[Parser::RESULT_ARGUMENTS][$name];
         }
 
-        throw new \LogicException('option/argument not defined: ' . $name);
+        throw new LogicException('option/argument not defined: ' . $name);
     }
 
     /**
      * get the parsed options and their values
      *
      * @return array
-     * @throws \LogicException
+     * @throws LogicException
      */
     public function getOptions() {
         if (is_null($this->result)) {
@@ -226,7 +227,7 @@ class Handler {
      * get parsed argument values
      *
      * @return array
-     * @throws \LogicException
+     * @throws LogicException
      */
     public function getArguments() {
         if (is_null($this->result)) {
