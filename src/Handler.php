@@ -173,6 +173,7 @@ class Handler {
         catch (UsageException $e) {
             if ($this->errorHandling) {
                 $this->handleUsageError($e);
+                return;
             }
             else {
                 // re-throw exception
@@ -181,6 +182,7 @@ class Handler {
         }
         catch (ShowHelpException $e) {
             $this->showHelp();
+            return;
         }
 
         $this->result = $parser->getResult();
