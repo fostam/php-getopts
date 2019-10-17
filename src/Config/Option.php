@@ -90,7 +90,7 @@ class Option {
      */
     public function argument($name) {
         $this->validated = false;
-        if (!preg_match('#^[a-zA-Z0-9\-\_]+$#', $name)) {
+        if (!preg_match('#^[a-zA-Z0-9\-_]+$#', $name)) {
             throw new OptionConfigException('illegal characters in name: ' . $name);
         }
         $this->config[self::ARGUMENT] = $name;
@@ -253,6 +253,6 @@ class Option {
      * @return bool
      */
     public static function validateLong($opt) {
-        return boolval(preg_match('#^[a-zA-Z0-9\-\_]+$#', $opt));
+        return boolval(preg_match('#^[a-zA-Z0-9\-_]+$#', $opt));
     }
 }

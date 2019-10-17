@@ -118,7 +118,7 @@ class Argument {
      * @return int
      */
     public static function validateName($name) {
-        return boolval(preg_match('#^[a-zA-Z0-9\-\_]+$#', $name));
+        return boolval(preg_match('#^[a-zA-Z0-9\-_]+$#', $name));
     }
 
     /**
