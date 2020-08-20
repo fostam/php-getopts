@@ -20,6 +20,15 @@ class HandlerTest extends TestCase {
         $this->assertEquals(['opt1' => 3, 'opt2' => 'defoptval', 'opt3' => null], $handler->getOptions());
         $this->assertEquals(['arg1' => 'test', 'arg2' => 'defargval'], $handler->getArguments());
         $this->assertEquals('script', $handler->getScriptName());
+
+        $this->assertTrue($handler->hasOption('opt2'));
+        $this->assertSame('defoptval',$handler->getOption('opt2'));
+        $this->assertTrue($handler->isOptionValue('opt2','defoptval'));
+
+
+        $this->assertTrue($handler->hasArgument('arg1'));
+        $this->assertSame('test',$handler->getArgument('arg1'));
+        $this->assertTrue($handler->isArgumentValue('arg1','test'));
     }
 
     public function testDisableErrorHandling() {
