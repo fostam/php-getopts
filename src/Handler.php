@@ -227,6 +227,44 @@ class Handler {
     }
 
     /**
+     * @param $option
+     *
+     * @return bool
+     * @throws UsageException
+     */
+    public function hasOption($option) {
+        return (array_key_exists($option, $this->getOptions()));
+    }
+
+    /**
+     * retrieve specific option
+     *
+     * @param $option
+     * @param null $default
+     *
+     * @return bool|mixed|null
+     * @throws UsageException
+     */
+    public function getOption($option, $default  = null)  {
+        $options = $this->getOptions();
+        return $this->hasOption($option) ? $options[$option] : $default;
+    }
+
+    /**
+     * is option equal to given value
+     *
+     * @param $option
+     * @param $value
+     *
+     * @return bool
+     * @throws UsageException
+     */
+    public function isOptionValue($option, $value) {
+        $options = $this->getOptions();
+        return $this->hasOption($option) && $options[$option] == $value;
+    }
+
+    /**
      * get parsed argument values
      *
      * @return array
@@ -237,6 +275,44 @@ class Handler {
             $this->parse();
         }
         return $this->result[Parser::RESULT_ARGUMENTS];
+    }
+
+    /**
+     * retrieve specific argument
+     *
+     * @param $argument
+     * @param null $default
+     *
+     * @return bool|mixed|null
+     * @throws UsageException
+     */
+    public function getArgument($argument, $default = null)  {
+        $arguments = $this->getArguments();
+        return $this->hasArgument($argument) ? $arguments[$argument] : $default;
+    }
+
+    /**
+     * @param $argument
+     *
+     * @return bool
+     * @throws UsageException
+     */
+    public function hasArgument($argument) {
+        return (array_key_exists($argument, $this->getArguments()));
+    }
+
+    /**
+     * is argument equal to a value
+     *
+     * @param $argument
+     * @param $value
+     *
+     * @return bool
+     * @throws UsageException
+     */
+    public function isArgumentValue($argument, $value) {
+        $arguments = $this->getArguments();
+        return isset($arguments[$argument]) && $arguments[$argument] == $value;
     }
 
     /**
