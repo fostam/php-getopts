@@ -190,7 +190,7 @@ class Handler {
 
     /**
      * @param string $name
-     * @return array
+     * @return array|string|mixed
      * @throws UsageException
      */
     public function get($name = '') {
