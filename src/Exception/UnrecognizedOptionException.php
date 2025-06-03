@@ -7,21 +7,17 @@ namespace Fostam\GetOpts\Exception;
  * @package Fostam\GetOpts\Exception
  */
 class UnrecognizedOptionException extends UsageException {
-    private $option;
+    private string $option;
 
     /**
      * TooManyArgumentsException constructor.
-     * @param string $option
      */
-    public function __construct($option) {
+    public function __construct(string $option) {
         $this->option = $option;
         parent::__construct('unrecognized option: ' . $option);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOption() {
+    public function getOption(): string {
         return $this->option;
     }
 }

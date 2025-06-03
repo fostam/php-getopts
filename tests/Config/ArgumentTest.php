@@ -7,10 +7,9 @@ use PHPUnit\Framework\TestCase;
 use Fostam\GetOpts\Config\Argument;
 
 class ArgumentTest extends TestCase {
-    /** @var Argument */
-    private $argument;
+    private Argument $argument;
 
-    public function setUp() {
+    public function setUp(): void {
         parent::setUp();
         $this->argument = new Argument();
     }

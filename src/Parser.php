@@ -24,31 +24,28 @@ class Parser {
     const RESULT_ARGUMENTS = 'arguments';
 
     /** @var Option[] $configOpts */
-    private $configOpts = [];
+    private array $configOpts;
     /** @var Argument[] $configArgs */
-    private $configArgs = [];
+    private array $configArgs;
 
-    private $usedName = [];
-    private $options = [];
-    private $arguments = [];
-    private $argumentsRaw = [];
+    private array $usedName = [];
+    private array $options = [];
+    private array $arguments = [];
+    private array $argumentsRaw = [];
 
-    private $optsShort = [];
-    private $optsLong = [];
+    private array $optsShort = [];
+    private array $optsLong = [];
 
 
     /**
      * Parser constructor.
-     * @param $opts
-     * @param $args
      */
-    public function __construct($opts = [], $args = []) {
+    public function __construct(array $opts = [], array $args = []) {
         $this->configOpts = $opts;
         $this->configArgs = $args;
     }
 
     /**
-     * @param array $args
      * @throws InvalidArgumentException
      * @throws InvalidOptionException
      * @throws MissingArgumentsException
@@ -58,7 +55,7 @@ class Parser {
      * @throws UnrecognizedOptionException
      * @throws MissingOptionsException
      */
-    public function parse($args) {
+    public function parse(array $args): void {
         $this->collectShortLong();
         $this->processOptions($args);
         $this->validateOptions();
@@ -66,11 +63,10 @@ class Parser {
     }
 
     /**
-     * @return array
      * @internal param $options
      * @internal param $arguments
      */
-    public function getResult() {
+    public function getResult(): array {
         return [
             self::RESULT_OPTIONS   => $this->options,
             self::RESULT_ARGUMENTS => $this->arguments,
@@ -78,12 +74,11 @@ class Parser {
     }
 
     /**
-     * @param $args
      * @throws MissingOptionArgumentException
      * @throws ShowHelpException
      * @throws UnrecognizedOptionException
      */
-    private function processOptions($args) {
+    private function processOptions(array $args): void {
         // process options
         $lastOpt = false;
         $optsFinished = false;
@@ -119,7 +114,7 @@ class Parser {
                 // treat single hyphen as argument
                 $this->argumentsRaw[] = $arg;
                 $lastOpt = false;
-            } else if (substr($arg, 0, 2) == '--') {
+            } else if (str_starts_with($arg, '--')) {
                 // long opt
                 $opt = substr($arg, 2, strlen($arg) - 2);
 
@@ -132,7 +127,7 @@ class Parser {
                 }
 
                 $negated = false;
-                if (substr($opt, 0, 2) == 'no') {
+                if (str_starts_with($opt, 'no')) {
                     $optNeg = substr($opt, 2, strlen($arg) - 2);
                     if (isset($this->optsLong[$optNeg]) && $this->configOpts[$this->optsLong[$optNeg]]->get(Option::NEGATABLE)) {
                         $opt = $optNeg;
@@ -150,7 +145,7 @@ class Parser {
 
                 $lastOpt = $this->optsLong[$opt];
                 $expectParam = $this->addOption($lastOpt, $arg, $negated);
-            } else if (substr($arg, 0, 1) == '-') {
+            } else if (str_starts_with($arg, '-')) {
                 // short opt(s)
                 $opts = substr($arg, 1, strlen($arg) - 1);
 
@@ -180,13 +175,7 @@ class Parser {
         }
     }
 
-    /**
-     * @param string $option
-     * @param string $value
-     * @param bool $negated
-     * @return bool
-     */
-    private function addOption($option, $value, $negated = false) {
+    private function addOption(string $option, string $value, bool $negated = false): bool {
         $this->usedName[$option] = $value;
         $expectParam = true;
         if ($this->configOpts[$option]->get(Option::INCREMENTABLE)) {
@@ -208,7 +197,7 @@ class Parser {
      * @throws InvalidOptionException
      * @throws MissingOptionsException
      */
-    private function validateOptions() {
+    private function validateOptions(): void {
         // validate values and fill unspecified options with default values
         foreach($this->configOpts as $name => $configOpt) {
             if ($name === self::HELP_OPTION_NAME) {
@@ -249,7 +238,7 @@ class Parser {
      * @throws MissingArgumentsException
      * @throws TooManyArgumentsException
      */
-    private function validateArguments() {
+    private function validateArguments(): void {
         $nonRequiredSet = false;
         $multipleSet = false;
 
@@ -312,7 +301,7 @@ class Parser {
     /**
      * collect short/long opts
      */
-    private function collectShortLong() {
+    private function collectShortLong(): void {
         foreach ($this->configOpts as $name => $configOpt) {
             if ($configOpt->get(Option::LONG)) {
                 $this->optsLong[$configOpt->get(Option::LONG)] = $name;

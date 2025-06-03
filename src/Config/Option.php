@@ -20,7 +20,7 @@ class Option {
     const DEFAULT_VALUE = 'DEFAULT_VALUE';
     const VALIDATOR     = 'VALIDATOR';
 
-    private $config = [
+    private array $config = [
         self::REQUIRED      => null,
         self::SHORT         => null,
         self::LONG          => null,
@@ -33,7 +33,7 @@ class Option {
         self::VALIDATOR     => null,
     ];
 
-    private $validated = false;
+    private bool $validated = false;
 
     /**
      * Option constructor.
@@ -43,11 +43,8 @@ class Option {
 
     /**
      * set the option's short name
-     *
-     * @param string $short
-     * @return $this
      */
-    public function short($short) {
+    public function short(string $short): self {
         $this->validated = false;
         if (!self::validateShort($short)) {
             throw new OptionConfigException('short option must be a single character: ' . $short);
@@ -58,11 +55,8 @@ class Option {
 
     /**
      * set the option's long name
-     *
-     * @param string $long
-     * @return $this
      */
-    public function long($long) {
+    public function long(string $long): self {
         $this->validated = false;
         if (!self::validateLong($long)) {
             throw new OptionConfigException('invalid long option format: ' . $long);
@@ -73,22 +67,16 @@ class Option {
 
     /**
      * set the option's description used in the help message
-     *
-     * @param string $description
-     * @return $this
      */
-    public function description($description) {
+    public function description(string $description): self {
         $this->config[self::DESCRIPTION] = $description;
         return $this;
     }
 
     /**
      * let the option require an argument with the given name
-     *
-     * @param string $name
-     * @return $this
      */
-    public function argument($name) {
+    public function argument(string $name): self {
         $this->validated = false;
         if (!preg_match('#^[a-zA-Z0-9\-_]+$#', $name)) {
             throw new OptionConfigException('illegal characters in name: ' . $name);
@@ -99,10 +87,8 @@ class Option {
 
     /**
      * change the option from optional to mandatory
-     *
-     * @return $this
      */
-    public function required() {
+    public function required(): self {
         $this->validated = false;
         $this->config[self::REQUIRED] = true;
         return $this;
@@ -110,11 +96,8 @@ class Option {
 
     /**
      * set the option argument's default value
-     *
-     * @param mixed $value
-     * @return $this
      */
-    public function defaultValue($value) {
+    public function defaultValue(mixed $value): self {
         $this->validated = false;
         $this->config[self::DEFAULT_VALUE] = $value;
         return $this;
@@ -122,10 +105,8 @@ class Option {
 
     /**
      * allow the option to be given multiple times
-     *
-     * @return $this
      */
-    public function multiple() {
+    public function multiple(): self {
         $this->validated = false;
         $this->config[self::MULTIPLE] = true;
         return $this;
@@ -133,10 +114,8 @@ class Option {
 
     /**
      * allow a negated version of the option (argumentless options only)
-     *
-     * @return $this
      */
-    public function negatable() {
+    public function negatable(): self {
         $this->validated = false;
         $this->config[self::NEGATABLE] = true;
         return $this;
@@ -144,11 +123,8 @@ class Option {
 
     /**
      * set the argument to incremental (increased by $increment when given multiple times)
-     *
-     * @param int $increment
-     * @return $this
      */
-    public function incrementable($increment = 1) {
+    public function incrementable(int $increment = 1): self {
         $this->validated = false;
         $this->config[self::INCREMENTABLE] = $increment;
         return $this;
@@ -156,22 +132,16 @@ class Option {
 
     /**
      * set a validator function that checks if the option's argument is valid
-     *
-     * @param callable $callable
-     * @return $this
      */
-    public function validator(callable $callable) {
+    public function validator(callable $callable): self {
         $this->config[self::VALIDATOR] = $callable;
         return $this;
     }
 
     /**
      * return full option configuration, or a specific parameter of the configuration
-     *
-     * @param string $param
-     * @return mixed
      */
-    public function get($param = '') {
+    public function get(string $param = ''): mixed {
         $this->validate();
 
         if ($param) {
@@ -189,7 +159,7 @@ class Option {
     /**
      * @throw OptionConfigException
      */
-    private function validate() {
+    private function validate(): void {
         if ($this->validated) {
             return;
         }
@@ -240,19 +210,11 @@ class Option {
         $this->validated = true;
     }
 
-    /**
-     * @param string $opt
-     * @return bool
-     */
-    public static function validateShort($opt) {
+    public static function validateShort(?string $opt): bool {
         return boolval(preg_match('#^[a-zA-Z0-9]$#', $opt));
     }
 
-    /**
-     * @param string $opt
-     * @return bool
-     */
-    public static function validateLong($opt) {
+    public static function validateLong(?string $opt): bool {
         return boolval(preg_match('#^[a-zA-Z0-9\-_]+$#', $opt));
     }
 }

@@ -7,6 +7,7 @@ use Fostam\GetOpts\Config\Option;
 use Fostam\GetOpts\Exception\ConfigException;
 use Fostam\GetOpts\Exception\ShowHelpException;
 use Fostam\GetOpts\Exception\UsageException;
+use JetBrains\PhpStorm\NoReturn;
 use LogicException;
 
 /**
@@ -15,19 +16,19 @@ use LogicException;
  */
 class Handler {
     /** @var Option[] $configOpts */
-    private $configOpts = [];
+    private array $configOpts = [];
     /** @var Argument[] $configArgs */
-    private $configArgs = [];
+    private array $configArgs = [];
 
-    private $scriptName = 'php-script';
+    private string $scriptName = 'php-script';
 
-    private $result;
+    private array $result = [];
 
-    private $helpShort = 'h';
-    private $helpLong = 'help';
-    private $errorHandling = true;
-    private $terseUsage = false;
-    private $extraHelp = '';
+    private string $helpShort = 'h';
+    private string $helpLong = 'help';
+    private bool $errorHandling = true;
+    private bool $terseUsage = false;
+    private string $extraHelp = '';
 
 
     /**
@@ -39,12 +40,9 @@ class Handler {
     /**
      * add a new option
      *
-     * @param string $name
-     * @param Option $opt
-     * @return Option
      * @throws ConfigException
      */
-    public function addOption($name, Option $opt = null) {
+    public function addOption(string $name, ?Option $opt = null): Option {
         if (isset($this->configOpts[$name]) || isset($this->configArgs[$name])) {
             throw new ConfigException('option/argument already set: ' . $name);
         }
@@ -59,13 +57,8 @@ class Handler {
 
     /**
      * add a new argument
-     *
-     * @param $name
-     * @param Argument $arg
-     * @return Argument
-     * @throws ConfigException
      */
-    public function addArgument($name, Argument $arg = null) {
+    public function addArgument($name, ?Argument $arg = null): Argument {
         if (isset($this->configOpts[$name]) || isset($this->configArgs[$name])) {
             throw new ConfigException('option/argument already set: ' . $name);
         }
@@ -80,11 +73,8 @@ class Handler {
 
     /**
      * set the long option for help handling
-     *
-     * @param string $str
-     * @return $this
      */
-    public function setHelpOptionLong($str) {
+    public function setHelpOptionLong(string $str): self {
         if (!Option::validateLong($str)) {
             throw new ConfigException('long help option has invalid format');
         }
@@ -94,11 +84,8 @@ class Handler {
 
     /**
      * set the short option for help handling
-     *
-     * @param string $str
-     * @return $this
      */
-    public function setHelpOptionShort($str) {
+    public function setHelpOptionShort(string $str): self {
         if (!Option::validateShort($str)) {
             throw new ConfigException('short help option must be a single character');
         }
@@ -108,31 +95,24 @@ class Handler {
 
     /**
      * disabled built-in error handling and throw exceptions instead
-     *
-     * @return $this
      */
-    public function disableErrorHandling() {
+    public function disableErrorHandling(): self {
         $this->errorHandling = false;
         return $this;
     }
 
     /**
      * don't list options in Usage string
-     *
-     * @return $this
      */
-    public function enableTerseUsage() {
+    public function enableTerseUsage(): self {
         $this->terseUsage = true;
         return $this;
     }
 
     /**
      * set additional help text that is appended below the generated help
-     *
-     * @param string $text
-     * @return $this
      */
-    public function setExtraHelpText($text) {
+    public function setExtraHelpText(string $text): self {
         $this->extraHelp = $text;
         return $this;
     }
@@ -141,10 +121,9 @@ class Handler {
      * parse arguments
      * the first element in the array is treated as script name
      *
-     * @param array $inputArgs
      * @throws UsageException
      */
-    public function parse($inputArgs = null) {
+    public function parse(array $inputArgs = null): void {
         $args = $this->getCommandLineArgs($inputArgs);
         if (count($args)) {
             $this->scriptName = array_shift($args);
@@ -173,28 +152,24 @@ class Handler {
         catch (UsageException $e) {
             if ($this->errorHandling) {
                 $this->handleUsageError($e);
-                return;
             }
             else {
                 // re-throw exception
                 throw $e;
             }
         }
-        catch (ShowHelpException $e) {
+        catch (ShowHelpException) {
             $this->showHelp();
-            return;
         }
 
         $this->result = $parser->getResult();
     }
 
     /**
-     * @param string $name
-     * @return array|string|mixed
      * @throws UsageException
      */
-    public function get($name = '') {
-        if (is_null($this->result)) {
+    public function get(string $name = ''): mixed {
+        if (empty($this->result)) {
             $this->parse();
         }
 
@@ -216,36 +191,28 @@ class Handler {
     /**
      * get the parsed options and their values
      *
-     * @return array
      * @throws UsageException
      */
-    public function getOptions() {
-        if (is_null($this->result)) {
+    public function getOptions(): array {
+        if (empty($this->result)) {
             $this->parse();
         }
         return $this->result[Parser::RESULT_OPTIONS];
     }
 
     /**
-     * @param $option
-     *
-     * @return bool
      * @throws UsageException
      */
-    public function hasOption($option) {
+    public function hasOption(string $option): bool {
         return (array_key_exists($option, $this->getOptions()));
     }
 
     /**
      * retrieve specific option
      *
-     * @param $option
-     * @param null $default
-     *
-     * @return bool|mixed|null
      * @throws UsageException
      */
-    public function getOption($option, $default  = null)  {
+    public function getOption(string $option, mixed $default = null): mixed {
         $options = $this->getOptions();
         return $this->hasOption($option) ? $options[$option] : $default;
     }
@@ -253,13 +220,9 @@ class Handler {
     /**
      * is option equal to given value
      *
-     * @param $option
-     * @param $value
-     *
-     * @return bool
      * @throws UsageException
      */
-    public function isOptionValue($option, $value) {
+    public function isOptionValue(string $option, mixed $value): bool {
         $options = $this->getOptions();
         return $this->hasOption($option) && $options[$option] == $value;
     }
@@ -267,11 +230,10 @@ class Handler {
     /**
      * get parsed argument values
      *
-     * @return array
      * @throws UsageException
      */
-    public function getArguments() {
-        if (is_null($this->result)) {
+    public function getArguments(): array {
+        if (empty($this->result)) {
             $this->parse();
         }
         return $this->result[Parser::RESULT_ARGUMENTS];
@@ -280,74 +242,56 @@ class Handler {
     /**
      * retrieve specific argument
      *
-     * @param $argument
-     * @param null $default
-     *
-     * @return bool|mixed|null
      * @throws UsageException
      */
-    public function getArgument($argument, $default = null)  {
+    public function getArgument(string $argument, mixed $default = null): mixed {
         $arguments = $this->getArguments();
         return $this->hasArgument($argument) ? $arguments[$argument] : $default;
     }
 
     /**
-     * @param $argument
-     *
-     * @return bool
      * @throws UsageException
      */
-    public function hasArgument($argument) {
+    public function hasArgument(string $argument): bool {
         return (array_key_exists($argument, $this->getArguments()));
     }
 
     /**
      * is argument equal to a value
      *
-     * @param $argument
-     * @param $value
-     *
-     * @return bool
      * @throws UsageException
      */
-    public function isArgumentValue($argument, $value) {
+    public function isArgumentValue(string $argument, mixed $value): bool {
         $arguments = $this->getArguments();
         return isset($arguments[$argument]) && $arguments[$argument] == $value;
     }
 
     /**
      * get the generated usage string (without script name and EOL)
-     *
-     * @return string
      */
-    public function getUsageString() {
+    public function getUsageString(): string {
         return $this->buildUsageString();
     }
 
     /**
      * get the generated help text (might be multiple lines, each line terminated by an EOL)
-     *
-     * @return string
      */
-    public function getHelpText() {
+    public function getHelpText(): string {
         return $this->buildHelpText();
     }
 
     /**
      * get the name of the PHP script
-     *
-     * @return string
      */
-    public function getScriptName() {
+    public function getScriptName(): string {
         return $this->scriptName;
     }
 
     /**
      * @param UsageException $e
      */
-    private function handleUsageError(UsageException $e) {
-        $str = '';
-        $str .= $this->scriptName . ': ' . $e->getMessage() . PHP_EOL;
+    #[NoReturn] private function handleUsageError(UsageException $e): void {
+        $str = $this->scriptName . ': ' . $e->getMessage() . PHP_EOL;
         $str .= 'Usage: ' . $this->getUsageString() . PHP_EOL;
         if ($this->helpShort || $this->helpLong) {
             $str .= "Try '{$this->scriptName} ";
@@ -370,17 +314,11 @@ class Handler {
     }
 
     /**
-     * @param $args
-     * @return array
      * @throws ConfigException
      */
-    private function getCommandLineArgs($args) {
+    private function getCommandLineArgs(?array $args): array {
         if (!is_null($args)) {
-            if (is_array($args)) {
-                return $args;
-            } else {
-                throw new ConfigException('arguments must be an array');
-            }
+            return $args;
         } else if (isset($_SERVER['argv'])) {
             return $_SERVER['argv'];
         } else {
@@ -388,10 +326,7 @@ class Handler {
         }
     }
 
-    /**
-     * @return string
-     */
-    private function buildUsageString() {
+    private function buildUsageString(): string {
         $str = $this->scriptName . ' ';
 
         // options
@@ -399,7 +334,7 @@ class Handler {
             $str .= '[OPTION]... ';
         }
         else {
-            foreach ($this->configOpts as $name => $configOpt) {
+            foreach ($this->configOpts as $configOpt) {
                 $opt = '';
                 if ($configOpt->get(Option::SHORT)) {
                     $opt .= '-' . $configOpt->get(Option::SHORT);
@@ -429,9 +364,12 @@ class Handler {
         }
 
         // arguments
-        foreach($this->configArgs as $name => $configArg) {
-            $arg = strtoupper($configArg->get(Argument::NAME));
-            if (!$arg) {
+        foreach($this->configArgs as $configArg) {
+            $arg = $configArg->get(Argument::NAME);
+            if ($arg) {
+                $arg = strtoupper($arg);
+            }
+            else {
                 $arg = 'ARGUMENT';
             }
 
@@ -452,19 +390,16 @@ class Handler {
     /**
      *
      */
-    private function showHelp() {
+    #[NoReturn] private function showHelp(): void {
         print 'Usage: ' . $this->getUsageString() . PHP_EOL;
         print $this->buildHelpText();
         exit(0);
     }
 
-    /**
-     * @return string
-     */
-    private function buildHelpText() {
+    private function buildHelpText(): string {
         $opts = [];
         $maxLeft = 0;
-        foreach($this->configOpts as $name => $configOpt) {
+        foreach($this->configOpts as $configOpt) {
             $left = '';
             if ($configOpt->get(Option::SHORT)) {
                 $left .= '-' . $configOpt->get(Option::SHORT);

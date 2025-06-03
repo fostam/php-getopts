@@ -15,7 +15,7 @@ class Argument {
     const DEFAULT_VALUE = 'DEFAULT_VALUE';
     const VALIDATOR     = 'VALIDATOR';
 
-    private $config = [
+    private array $config = [
         self::REQUIRED      => null,
         self::NAME          => null,
         self::MULTIPLE      => null,
@@ -23,7 +23,7 @@ class Argument {
         self::VALIDATOR     => null,
     ];
 
-    private $validated = false;
+    private bool $validated = false;
 
 
     /**
@@ -34,10 +34,8 @@ class Argument {
 
     /**
      * change the argument from optional to mandatory
-     *
-     * @return $this
      */
-    public function required() {
+    public function required(): self {
         $this->validated = false;
         $this->config[self::REQUIRED] = true;
         return $this;
@@ -45,11 +43,8 @@ class Argument {
 
     /**
      * set the argument's name
-     *
-     * @param string $name
-     * @return $this
      */
-    public function name($name) {
+    public function name(string $name): self {
         $this->config[self::NAME] = $name;
         if (!self::validateName($name)) {
             throw new ArgumentConfigException('illegal characters in name: ' . $name);
@@ -59,10 +54,8 @@ class Argument {
 
     /**
      * allow the argument to be given multiple times (only valid for the last argument)
-     *
-     * @return $this
      */
-    public function multiple() {
+    public function multiple(): self {
         $this->validated = false;
         $this->config[self::MULTIPLE] = true;
         return $this;
@@ -70,11 +63,8 @@ class Argument {
 
     /**
      * set the argument's default value
-     *
-     * @param mixed $value
-     * @return $this
      */
-    public function defaultValue($value) {
+    public function defaultValue(mixed $value): self {
         $this->validated = false;
         $this->config[self::DEFAULT_VALUE] = $value;
         return $this;
@@ -82,11 +72,8 @@ class Argument {
 
     /**
      * set a validator function that checks if the argument is valid
-     *
-     * @param callable $validator
-     * @return $this
      */
-    public function validator(callable $validator) {
+    public function validator(callable $validator): self {
         $this->config[self::VALIDATOR] = $validator;
         return $this;
     }
@@ -94,11 +81,9 @@ class Argument {
     /**
      * return full argument configuration, or a specific parameter of the configuration
      *
-     * @param string $param
-     * @return mixed
      * @throws ArgumentConfigException
      */
-    public function get($param = '') {
+    public function get(string $param = ''): mixed {
         $this->validate();
 
         if ($param) {
@@ -113,18 +98,14 @@ class Argument {
         return $this->config;
     }
 
-    /**
-     * @param $name
-     * @return int
-     */
-    public static function validateName($name) {
+    public static function validateName(?string $name): bool {
         return boolval(preg_match('#^[a-zA-Z0-9\-_]+$#', $name));
     }
 
     /**
      * @throws ArgumentConfigException
      */
-    private function validate() {
+    private function validate(): void {
         if ($this->validated) {
             return;
         }

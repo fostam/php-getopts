@@ -7,21 +7,17 @@ namespace Fostam\GetOpts\Exception;
  * @package Fostam\GetOpts\Exception
  */
 class InvalidArgumentException extends UsageException {
-    private $argumentName;
+    private string $argumentName;
 
     /**
      * InvalidArgumentException constructor.
-     * @param string $argument
      */
-    public function __construct($argument) {
+    public function __construct(string $argument) {
         $this->argumentName = $argument;
         parent::__construct('invalid argument: ' . $argument);
     }
 
-    /**
-     * @return string
-     */
-    public function getArgumentName() {
+    public function getArgumentName(): string {
         return $this->argumentName;
     }
 }

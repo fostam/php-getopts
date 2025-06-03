@@ -7,31 +7,27 @@ namespace Fostam\GetOpts\Exception;
  * @package Fostam\GetOpts\Exception
  */
 class InvalidOptionException extends UsageException {
-    private $option;
-    private $value;
+    private string $option;
+    private mixed $value;
 
     /**
      * InvalidOptionException constructor.
-     * @param string $option
      * @param mixed $value
      */
-    public function __construct($option, $value) {
+    public function __construct(string $option, $value) {
         $this->option = $option;
         $this->value = $value;
         parent::__construct("invalid value '{$value}' for '{$option}'");
     }
 
-    /**
-     * @return string
-     */
-    public function getOption() {
+    public function getOption(): string {
         return $this->option;
     }
 
     /**
      * @return mixed
      */
-    public function getValue() {
+    public function getValue(): mixed {
         return $this->value;
     }
 }

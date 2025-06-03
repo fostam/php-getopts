@@ -7,10 +7,9 @@ use PHPUnit\Framework\TestCase;
 use Fostam\GetOpts\Config\Option;
 
 class OptionTest extends TestCase {
-    /** @var Option */
-    private $option;
+    private Option $option;
 
-    public function setUp() {
+    public function setUp(): void {
         parent::setUp();
         $this->option = new Option();
     }
