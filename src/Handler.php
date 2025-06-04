@@ -123,7 +123,7 @@ class Handler {
      *
      * @throws UsageException
      */
-    public function parse(array $inputArgs = null): void {
+    public function parse(?array $inputArgs = null): void {
         $args = $this->getCommandLineArgs($inputArgs);
         if (count($args)) {
             $this->scriptName = array_shift($args);
