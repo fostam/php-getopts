@@ -211,10 +211,16 @@ class Option {
     }
 
     public static function validateShort(?string $opt): bool {
+        if (is_null($opt)) {
+            return false;
+        }
         return boolval(preg_match('#^[a-zA-Z0-9]$#', $opt));
     }
 
     public static function validateLong(?string $opt): bool {
+        if (is_null($opt)) {
+            return false;
+        }
         return boolval(preg_match('#^[a-zA-Z0-9\-_]+$#', $opt));
     }
 }

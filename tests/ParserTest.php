@@ -449,7 +449,7 @@ class ParserTest extends TestCase {
         $this->assertEquals($expectedArgs, $result[Parser::RESULT_ARGUMENTS]);
     }
 
-    public function optionsArgumentsMixedProvider() {
+    public static function optionsArgumentsMixedProvider(): array {
         return [
             [ ['x'], ['a' => null, 'b' => null, 'c' => 'defval'], ['x' => 'x', 'y' => null] ],
             [ ['x', 'y'], ['a' => null, 'b' => null, 'c' => 'defval'], ['x' => 'x', 'y' => 'y'] ],

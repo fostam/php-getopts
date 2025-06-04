@@ -99,6 +99,9 @@ class Argument {
     }
 
     public static function validateName(?string $name): bool {
+        if (is_null($name)) {
+            return false;
+        }
         return boolval(preg_match('#^[a-zA-Z0-9\-_]+$#', $name));
     }
 
